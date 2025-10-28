@@ -6,10 +6,26 @@ export default function FormCard() {
   const [longUrl, setLongUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Simulate URL shortening
-    setShortUrl(`https://short.url/HASH1234`);
+    try {
+      const response = await fetch("/api/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ longUrl }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to shorten URL");
+      }
+
+      const data = await response.json();
+      setShortUrl(data.shortUrl);
+    } catch (error) {
+      console.error("Error shortening URL:", error);
+    }
   };
 
   return (
