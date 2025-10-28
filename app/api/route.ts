@@ -20,11 +20,11 @@
  * // { "shortUrl": "https://short.url/ABCDEF" }
  */
 
+import { createShortUrl } from "./urlService";
+
 export async function POST(request: Request) {
   const { longUrl } = await request.json();
-  console.log("Received URL to shorten:", longUrl);
-  // Simulate URL shortening
-  const shortUrl = `https://short.url/ABCDEF`;
+  const shortUrl = await createShortUrl(longUrl);
   return new Response(JSON.stringify({ shortUrl }), {
     headers: { "Content-Type": "application/json" },
   });

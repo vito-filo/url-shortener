@@ -7,14 +7,17 @@
  *
  */
 import { NextRequest, NextResponse } from "next/server";
+import { getLongUrl } from "../urlService";
 
 export async function GET(
   request: NextRequest,
   context: { params: Promise<{ hash: string }> }
 ) {
   const { hash } = await context.params;
-
-  return NextResponse.json({
-    message: `You sent hash: ${hash}`,
-  });
+  const longUrl = await getLongUrl(hash);
+  if (longUrl) {
+    return NextResponse.redirect(longUrl);
+  } else {
+    return NextResponse.json({ error: "URL not found" }, { status: 404 });
+  }
 }
