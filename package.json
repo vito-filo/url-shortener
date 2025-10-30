@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "postinstall": "prisma generate --no-engine"
   },
   "dependencies": {
     "@hqtsm/crc": "^1.0.4",
