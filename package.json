@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate && ls -la ./app/generated/prisma"
+    "postinstall": "prisma generate && ls -la ./app/generated/prisma && cp app/generated/prisma/libquery_engine-rhel-openssl-3.0.x.so.node ./node_modules/@prisma/engines/libquery_engine-rhel-openssl-3.0.x.so.node && cp app/generated/prisma/libquery_engine-rhel-openssl-3.0.x.so.node ./node_modules/"
   },
   "dependencies": {
     "@hqtsm/crc": "^1.0.4",
