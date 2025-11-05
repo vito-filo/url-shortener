@@ -1,11 +1,18 @@
+import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "../app/generated/prisma/client";
+import pg from "pg";
 
-const globalForPrisma = global as unknown as {
-  prisma: PrismaClient;
-};
+const ca = process.env.DATABASE_CA_CERT;
 
-const prisma = globalForPrisma.prisma || new PrismaClient();
+const pool = new pg.Pool({
+  connectionString: process.env.POSTGRES_PRISMA_URL!,
+  ssl: {
+    rejectUnauthorized: true,
+    ca,
+  },
+});
 
-if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+const adapter = new PrismaPg(pool);
+const prisma = new PrismaClient({ adapter });
 
 export default prisma;
