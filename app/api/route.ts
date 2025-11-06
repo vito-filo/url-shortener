@@ -24,7 +24,11 @@ import { createShortUrl } from "./urlService";
 
 export async function POST(request: Request) {
   const { longUrl } = await request.json();
-  const shortUrl = await createShortUrl(longUrl);
+
+  const url = new URL(request.url);
+  const origin = url.origin;
+
+  const shortUrl = await createShortUrl(origin, longUrl);
   return new Response(JSON.stringify({ shortUrl }), {
     headers: { "Content-Type": "application/json" },
   });
