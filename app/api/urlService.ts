@@ -33,11 +33,12 @@ export async function createShortUrl(
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         // Prisma-specific handling (unique constraint P2002)
-        if (error.code === "P2002" && !conflict) {
-          const existing = await prisma.url.findFirst({ where: { longUrl } });
-          if (existing) return `${origin}/${existing.hash}`;
+        if (error.code === "P2002") {
+          if (!conflict) {
+            const existing = await prisma.url.findFirst({ where: { longUrl } });
+            if (existing) return `${origin}/${existing.hash}`;
+          }
           // otherwise handle hash collision
-        } else {
           conflict = true;
           hash = hashUrl(
             longUrl + CHARS[Math.floor(Math.random() * CHARS.length)]
@@ -46,6 +47,7 @@ export async function createShortUrl(
           continue;
         }
       }
+      throw error;
     }
   }
   throw new Error(
