@@ -5,7 +5,7 @@ import pg from "pg";
 const ca = process.env.DATABASE_CA_CERT;
 
 const pool = new pg.Pool({
-  connectionString: process.env.POSTGRES_PRISMA_URL!,
+  connectionString: process.env.PRISMA_CUSTOM_URL!,
   ssl: {
     rejectUnauthorized: true,
     ca,

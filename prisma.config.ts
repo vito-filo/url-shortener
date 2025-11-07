@@ -13,6 +13,6 @@ export default defineConfig({
   },
   engine: "classic",
   datasource: {
-    url: env("POSTGRES_PRISMA_URL"),
+    url: env("PRISMA_CUSTOM_URL"),
   },
 });
