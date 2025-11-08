@@ -6,28 +6,48 @@ export default function FormCard() {
   const [longUrl, setLongUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [copied, setCopied] = useState(false);
+  const [error, setError] = useState(false);
+
+  const isvalidUrl = (url: string): boolean => {
+    try {
+      const newUrl = new URL(url);
+      if (
+        newUrl.protocol !== "http:" &&
+        newUrl.protocol !== "https:" &&
+        newUrl.hostname === ""
+      ) {
+        return false;
+      }
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    // TODO add validation checks
-    // e.g., valid URL format, non-empty input, etc.
     e.preventDefault();
-    try {
-      const response = await fetch("/api/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ longUrl }),
-      });
+    if (!isvalidUrl(longUrl)) {
+      setError(true);
+    } else {
+      setError(false);
+      try {
+        const response = await fetch("/api/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ longUrl }),
+        });
 
-      if (!response.ok) {
-        throw new Error("Failed to shorten URL");
+        if (!response.ok) {
+          throw new Error("Failed to shorten URL");
+        }
+
+        const data = await response.json();
+        setShortUrl(data.shortUrl);
+      } catch (error) {
+        console.error("Error shortening URL:", error);
       }
-
-      const data = await response.json();
-      setShortUrl(data.shortUrl);
-    } catch (error) {
-      console.error("Error shortening URL:", error);
     }
   };
 
@@ -77,6 +97,13 @@ export default function FormCard() {
                 placeholder="https://example.com/very-long-url-that-needs-shortening"
                 className="w-full pl-12 pr-4 py-4 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 text-lg transition-all duration-200"
               />
+              <div>
+                {error && (
+                  <p className="mt-2 text-sm text-red-600">
+                    Please enter a valid URL.
+                  </p>
+                )}
+              </div>
             </div>
           </div>
 
