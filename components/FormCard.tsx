@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function FormCard() {
   const [longUrl, setLongUrl] = useState("");
   const [shortUrl, setShortUrl] = useState("");
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const isvalidUrl = (url: string): boolean => {
     try {
@@ -26,6 +28,8 @@ export default function FormCard() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    setLoading(true);
     if (!isvalidUrl(longUrl)) {
       setError(true);
     } else {
@@ -47,6 +51,8 @@ export default function FormCard() {
         setShortUrl(data.shortUrl);
       } catch (error) {
         console.error("Error shortening URL:", error);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -129,6 +135,14 @@ export default function FormCard() {
               Shorten URL
             </span>
           </button>
+
+          {/* Loading Spinner */}
+          {loading && (
+            <div className="flex justify-center">
+              <Spinner className="size-6 text-blue-600 size-6" />
+              <p className="ml-2">Creating short URL ...</p>
+            </div>
+          )}
 
           {/* Result Section */}
           <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-600">
