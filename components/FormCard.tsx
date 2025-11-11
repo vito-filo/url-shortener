@@ -28,11 +28,12 @@ export default function FormCard() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setShortUrl("");
 
-    setLoading(true);
     if (!isvalidUrl(longUrl)) {
       setError(true);
     } else {
+      setLoading(true);
       setError(false);
       try {
         const response = await fetch("/api/", {
