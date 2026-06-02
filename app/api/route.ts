@@ -25,8 +25,9 @@ import { createShortUrl } from "./urlService";
 export async function POST(request: Request) {
   const { longUrl } = await request.json();
 
-  const url = new URL(request.url);
-  const origin = url.origin;
+  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? new URL(request.url).host;
+  const proto = request.headers.get("x-forwarded-proto") ?? "https";
+  const origin = `${proto}://${host}`;
 
   const shortUrl = await createShortUrl(origin, longUrl);
   return new Response(JSON.stringify({ shortUrl }), {
