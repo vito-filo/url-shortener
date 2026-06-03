@@ -118,5 +118,24 @@
   }
   body {
     @apply bg-background text-foreground;
+    zoom: 0.75;
+  }
+
+  @media (min-height: 600px) {
+    body {
+      zoom: 0.8;
+    }
+  }
+
+  @media (min-height: 800px) {
+    body {
+      zoom: 0.9;
+    }
+  }
+
+  @media (min-height: 900px) {
+    body {
+      zoom: 1;
+    }
   }
 }
